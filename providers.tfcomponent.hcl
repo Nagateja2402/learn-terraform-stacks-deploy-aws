@@ -10,6 +10,10 @@ required_providers {
     source  = "hashicorp/tls"
     version = "~> 4.1.0"
   }
+  random = {
+    source  = "hashicorp/random"
+    version = "~> 3.5.1"
+  }
 }
 
 provider "aws" "this" {
@@ -30,3 +34,6 @@ provider "aws" "this" {
 }
 
 provider "tls" "this" {}
+
+provider "random" "this" {
+}
