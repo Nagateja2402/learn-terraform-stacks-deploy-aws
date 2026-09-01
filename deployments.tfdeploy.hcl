@@ -8,7 +8,7 @@ identity_token "aws" {
 deployment "development" {
   inputs = {
     regions        = ["us-east-1"]
-    role_arn       = "<YOUR_ROLE_ARN>"
+    role_arn       = "arn:aws:iam::992382722822:role/stacks-nagateja-test-org-nagateja-stacks-testing"
     identity_token = identity_token.aws.jwt
     default_tags = {
       Stack       = "learn-stacks-deploy-aws",
@@ -17,14 +17,14 @@ deployment "development" {
   }
 }
 
-deployment "production" {
-  inputs = {
-    regions        = ["us-east-1", "us-west-1"]
-    role_arn       = "<YOUR_ROLE_ARN>"
-    identity_token = identity_token.aws.jwt
-    default_tags = {
-      Stack       = "learn-stacks-deploy-aws",
-      Environment = "prod"
-    }
-  }
-}
+# deployment "production" {
+#   inputs = {
+#     regions        = ["us-east-1", "us-west-1"]
+#     role_arn       = "arn:aws:iam::992382722822:role/stacks-nagateja-test-org-nagateja-stacks-testing"
+#     identity_token = identity_token.aws.jwt
+#     default_tags = {
+#       Stack       = "learn-stacks-deploy-aws",
+#       Environment = "prod"
+#     }
+#   }
+# }
