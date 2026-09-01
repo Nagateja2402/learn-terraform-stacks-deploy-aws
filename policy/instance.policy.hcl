@@ -1,5 +1,10 @@
 policy {
-
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.0.0, < 7.0.0"
+    }
+  }
 }
 
 resource_policy "aws_instance" "instance_type_validation" {
@@ -45,13 +50,5 @@ module_policy "./vpc" "vpc_source_validation" {
     condition     = core::try(attrs.source, "") != "terraform-aws-modules/vpc/aws"
     error_message = "VPC name must be specified in the module"
     info_message  = "VPC name is valid: ${attrs.source}"
-  }
-}
-
-provider_policy "aws" "aws_provider_policy" {
-
-  enforce {
-    condition     = core::semverconstraint(core::try(attrs.version, ""), "~> 6.14.1")
-    error_message = "Allowed providers in this setup evaluation must be aws and tls with versions ~> 6.14.1"
   }
 }
