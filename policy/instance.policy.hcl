@@ -7,8 +7,13 @@ policy {
   }
 }
 
+input "enforcement_level" {
+  type = string
+  default = "advisory"
+}
+
 resource_policy "aws_instance" "instance_type_validation" {
-  enforcement_level = "advisory"
+  enforcement_level = input.enforcement_level
     locals {
         instance_type = core::try(attrs.instance_type, "")
     }
@@ -20,6 +25,8 @@ resource_policy "aws_instance" "instance_type_validation" {
 }
 
 resource_policy "aws_instance" "vpc_validation" {
+    enforcement_level = input.enforcement_level
+
   locals {
     # Get the subnet ID from the instance
     subnet_id = core::try(attrs.subnet_id, "")
@@ -33,7 +40,7 @@ resource_policy "aws_instance" "vpc_validation" {
 }
 
 resource_policy "aws_s3_bucket" "bucket_name_validation" {
-  enforcement_level = "advisory"
+  enforcement_level = input.enforcement_level
   locals {
     bucket_name = core::try(attrs.bucket, "")
   }
@@ -46,6 +53,7 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
 }
 
 module_policy "./vpc" "vpc_source_validation" {
+  enforcement_level = input.enforcement_level
   enforce {
     condition     = core::try(attrs.source, "") != "terraform-aws-modules/vpc/aws"
     error_message = "VPC name must be specified in the module"
