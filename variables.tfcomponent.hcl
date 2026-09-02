@@ -25,3 +25,8 @@ variable "default_tags" {
     Environment = "dev"
   }
 }
+
+variable "bucket-name" {
+  type = string
+  default = "test-bucket-naga-stacks-2402"
+}
