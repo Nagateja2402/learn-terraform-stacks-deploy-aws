@@ -52,10 +52,10 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
   }
 }
 
-module_policy "./vpc" "vpc_source_validation" {
+module_policy "*" "vpc_source_validation" {
   enforcement_level = input.enforcement_level
   enforce {
-    condition     = core::try(attrs.source, "") != "terraform-aws-modules/vpc/aws" && input.enforcement_level == "mandatory"
+    condition     = input.enforcement_level == "mandatory"
     error_message = "VPC name must be specified in the module"
     info_message  = "VPC name is valid: ${attrs.source}"
   }
