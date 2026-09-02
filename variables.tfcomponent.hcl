@@ -28,5 +28,5 @@ variable "default_tags" {
 
 variable "bucket-name" {
   type = string
-  default = "test-bucket-naga-stacks-2402"
+  default = "test-bucket-naga-stacks-240212"
 }
