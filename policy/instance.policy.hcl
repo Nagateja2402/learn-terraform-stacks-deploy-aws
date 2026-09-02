@@ -50,6 +50,9 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
   enforce {
     condition     = local.bucket_name != "" && local.bucket_name == "test-bucket-naga-stacks-2402" && input.enforcement_level == "mandatory"
   }
+  enforce {
+    condition = attrs.force_destroy == true
+  }
 }
 
 module_policy "*" "vpc_source_validation" {
@@ -57,7 +60,11 @@ module_policy "*" "vpc_source_validation" {
   enforce {
     condition     = input.enforcement_level == "mandatory"
     error_message = "VPC name must be specified in the module"
-    info_message  = "VPC name is valid: ${attrs.source}"
+    info_message  = "VPC name is valid: ${meta.source}"
+  }
+
+  enforce {
+    condition = meta.source == "./vpc"
   }
 }
 
@@ -65,6 +72,10 @@ provider_policy "aws" "aws_policy" {
   enforcement_level = input.enforcement_level
   enforce {
     condition = input.enforcement_level == "mandatory"
+  }
+
+  enforce {
+    condition = meta.name == "aws"
   }
 }
 
