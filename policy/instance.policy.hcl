@@ -13,6 +13,12 @@ input "enforcement_level" {
   sensitive = true
 }
 
+input "tags" {
+  type = string
+  default = "{\"Environment\":\"dev\",\"Owner\":\"platform-team\",\"CostCenter\":\"engineering\"}"
+
+}
+
 resource_policy "aws_instance" "instance_type_validation" {
   enforcement_level = input.enforcement_level
     locals {
@@ -82,5 +88,30 @@ provider_policy "aws" "aws_policy" {
 resource_policy "aws_dax_cluster" "not-exist" {
   enforce {
     condition = attrs.cluster_name == "new_cluster"
+  }
+}
+
+# Policy to test jsondecode PASS condition
+# Tests decoding a valid JSON string and validating a field value
+resource_policy "aws_instance" "jsondecode_pass_validation" {
+  enforcement_level = input.enforcement_level
+  
+  locals {
+    # Valid JSON string representing instance tags
+    tags_json = input.tags
+    
+    # Decode the JSON string
+    decoded_tags = core::jsondecode(local.tags_json)
+    
+    # Extract specific values for validation
+    environment = core::try(local.decoded_tags.Environment, "")
+    owner = core::try(local.decoded_tags.Owner, "")
+  }
+  
+  enforce {
+    # PASS condition: Valid JSON decodes successfully and contains expected fields
+    condition = local.environment == "dev" && local.owner != ""
+    info_message = "JSON decode PASS: Successfully decoded tags JSON. Environment=${local.environment}, Owner=${local.owner}"
+    error_message = "JSON decode test failed: Expected Environment=dev and Owner to be present"
   }
 }
