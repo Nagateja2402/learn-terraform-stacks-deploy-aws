@@ -51,7 +51,7 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
     condition     = local.bucket_name != "" && local.bucket_name == "test-bucket-naga-stacks-2402" && input.enforcement_level == "mandatory"
   }
   enforce {
-    condition = attrs.force_destroy == true
+    condition = attrs.force_destroy == false
   }
 }
 
@@ -64,7 +64,7 @@ module_policy "*" "vpc_source_validation" {
   }
 
   enforce {
-    condition = meta.source == "./vpc"
+    condition = core::contains(["module.load_random", "module.vpc"], meta.source)
   }
 }
 
@@ -75,7 +75,7 @@ provider_policy "aws" "aws_policy" {
   }
 
   enforce {
-    condition = meta.name == "aws"
+    condition = meta.name == "azure"
   }
 }
 
