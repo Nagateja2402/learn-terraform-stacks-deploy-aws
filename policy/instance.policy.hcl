@@ -7,18 +7,6 @@ policy {
   }
 }
 
-input "enforcement_level" {
-  type = string
-  default = "advisory"
-  sensitive = true
-}
-
-input "tags" {
-  type = string
-  default = "{\"Environment\":\"dev\",\"Owner\":\"platform-team\",\"CostCenter\":\"engineering\"}"
-
-}
-
 resource_policy "aws_instance" "instance_type_validation" {
   enforcement_level = input.enforcement_level
     locals {
@@ -117,6 +105,7 @@ resource_policy "aws_instance" "jsondecode_pass_validation" {
 }
 
 resource_policy "aws_s3_bucket" "bucket-update-restricted" {
+  enforcement_level = input.enforcement_level
   operations = [ "update" ]
   enforce {
     condition = attrs.bucket == prior_attrs.bucket
@@ -124,6 +113,7 @@ resource_policy "aws_s3_bucket" "bucket-update-restricted" {
 }
 
 resource_policy "aws_s3_bucket" "deleted_restricted" {
+  enforcement_level = input.enforcement_level
   operations = [ "delete" ] 
   enforce {
     condition = false
