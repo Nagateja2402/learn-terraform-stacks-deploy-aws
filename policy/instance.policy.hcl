@@ -48,7 +48,7 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
   }
 
   enforce {
-    condition     = local.bucket_name != "" && local.bucket_name == "test-bucket-naga-stacks-2402" && input.enforcement_level == "mandatory"
+    condition     = local.bucket_name != "" && local.bucket_name == "test-bucket-naga-stacks-2402" && input.enforcement_level == "advisory"
   }
   enforce {
     condition = attrs.force_destroy == false
@@ -58,20 +58,20 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
 module_policy "*" "vpc_source_validation" {
   enforcement_level = input.enforcement_level
   enforce {
-    condition     = input.enforcement_level == "mandatory"
+    condition     = input.enforcement_level == "advisory"
     error_message = "VPC name must be specified in the module"
-    info_message  = "VPC name is valid: ${meta.source}"
+    info_message  = "VPC name is valid: ${meta.source}, address: ${meta.address}"
   }
 
   enforce {
-    condition = core::contains(["module.load_random", "module.vpc"], meta.source)
+    condition = core::contains(["module.load_random", "module.vpc"], meta.address)
   }
 }
 
 provider_policy "aws" "aws_policy" {
   enforcement_level = input.enforcement_level
   enforce {
-    condition = input.enforcement_level == "mandatory"
+    condition = input.enforcement_level == "advisory"
   }
 
   enforce {
