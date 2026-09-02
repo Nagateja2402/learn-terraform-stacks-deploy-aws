@@ -41,6 +41,7 @@ resource_policy "aws_instance" "vpc_validation" {
 
 resource_policy "aws_s3_bucket" "bucket_name_validation" {
   enforcement_level = input.enforcement_level
+  filter = meta.tfe_stack.deployment_name == "development"
   locals {
     bucket_name = core::try(attrs.bucket, "")
   }
@@ -48,7 +49,7 @@ resource_policy "aws_s3_bucket" "bucket_name_validation" {
   enforce {
     condition     = local.bucket_name != "" && local.bucket_name == "archana-tfpolicy-stack-202604270235"
     error_message = "S3 bucket name must be specified and should be archana-tfpolicy-stack-202604270235"
-    info_message  = "S3 bucket name is valid: ${local.bucket_name}"
+    info_message  = "S3 bucket name is valid: ${local.bucket_name}, metadata: stack_name: ${meta.tfe_stack.stack_name}, deployment_name: ${meta.tfe_stack.deployment_name}, deployment_group: ${meta.tfe_stack.deployment_group}"
   }
 }
 
