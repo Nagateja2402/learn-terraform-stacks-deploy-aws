@@ -21,7 +21,7 @@ resource_policy "aws_instance" "instance_type_validation" {
     enforce {
         condition = local.instance_type != "" && local.instance_type != "t2.micro"
         error_message = "Instance type must be specified and should not be t2.micro"
-        info_message = "Instance type is valid: ${local.instance_type}"
+        info_message = "Instance type is valid: ${local.instance_type}, enforcement_level: ${input.enforcement_level}"
     }
 }
 
