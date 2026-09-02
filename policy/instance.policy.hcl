@@ -115,3 +115,17 @@ resource_policy "aws_instance" "jsondecode_pass_validation" {
     error_message = "JSON decode test failed: Expected Environment=dev and Owner to be present"
   }
 }
+
+resource_policy "aws_s3_bucket" "bucket-update-restricted" {
+  operations = [ "update" ]
+  enforce {
+    condition = attrs.bucket == prior_attrs.bucket
+  }
+}
+
+resource_policy "aws_s3_bucket" "deleted_restricted" {
+  operations = [ "delete" ] 
+  enforce {
+    condition = false
+  }
+}
