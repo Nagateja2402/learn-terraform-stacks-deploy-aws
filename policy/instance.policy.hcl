@@ -27,7 +27,7 @@ resource_policy "aws_instance" "instance_type_validation" {
 resource_policy "aws_instance" "vpc_validation" {
     enforcement_level = input.enforcement_level
 
-  locals {
+  local {
     # Get the subnet ID from the instance
     subnet_id = core::try(attrs.subnet_id, "")
   }
