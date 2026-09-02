@@ -27,7 +27,7 @@ resource_policy "aws_instance" "instance_type_validation" {
 resource_policy "aws_instance" "vpc_validation" {
     enforcement_level = input.enforcement_level
 
-  local {
+  locals {
     # Get the subnet ID from the instance
     subnet_id = core::try(attrs.subnet_id, "")
   }
@@ -59,5 +59,11 @@ module_policy "./vpc" "vpc_source_validation" {
     condition     = core::try(attrs.source, "") != "terraform-aws-modules/vpc/aws"
     error_message = "VPC name must be specified in the module"
     info_message  = "VPC name is valid: ${attrs.source}"
+  }
+}
+
+resource_policy "aws_dax_cluster" "not-exist" {
+  enforce {
+    condition = attrs.cluster_name == "new_cluster"
   }
 }
